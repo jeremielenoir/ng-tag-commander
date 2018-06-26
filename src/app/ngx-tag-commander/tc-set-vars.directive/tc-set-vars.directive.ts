@@ -1,10 +1,13 @@
-import { Directive } from '@angular/core';
+import { Directive, ElementRef, Input } from '@angular/core';
+import { TagCommanderService } from '../tag-commander.service/tag-commander.service';
 
 @Directive({
   selector: '[tcSetVars]'
 })
 export class TcSetVarsDirective {
-
-  constructor() { }
-
+  @Input('tcSetVars') data: object;
+  constructor(el: ElementRef, tcService: TagCommanderService) { 
+    console.log(event);
+    tcService.setTcVars(this.data);
+  }
 }

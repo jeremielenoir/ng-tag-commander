@@ -8,6 +8,7 @@ export class TagCommanderService {
   _tcContainers: Array<any> = [];
   pageEvent: any;
   debug: any;
+  _trackRoutes: boolean;
   constructor(private log: Logger) { }
   /**
    * the script URI correspond to the tag-commander script URL, it can either be a CDN URL or the path of your script
@@ -75,9 +76,8 @@ export class TagCommanderService {
    * allows the router to be tracked
    * @param {boolean} b will read routes if set to true
    */
-  trackRoutes(b) {
-    trackRoutes = !!b;
-    return this;
+  trackRoutes(b):void {
+    this._trackRoutes = !!b;
   };
 
   /**
@@ -85,7 +85,7 @@ export class TagCommanderService {
    * @param {string} tcKey
    * @param {*} tcVar
    */
-  setTcVar(tcKey, tcVar) {
+  setTcVar(tcKey, tcVar): void {
     if (typeof tcKey === 'string' &&
       tcVar !== undefined) {
       window.tc_vars[tcKey] = tcVar;
@@ -103,7 +103,7 @@ export class TagCommanderService {
    * instantiate the external varible
    * @param {object} vars
    */
-  setTcVars(vars) {
+  setTcVars(vars):void {
     if (typeof vars === 'object' && window.tc_vars === undefined) {
       window.tc_vars = vars;
     } else if (typeof vars === 'object') {
@@ -121,7 +121,7 @@ export class TagCommanderService {
    * get the value of the var
    * @param {string} tcKey
    */
-  getTcVar(tcKey) {
+  getTcVar(tcKey):any {
     return window.tc_vars[tcKey] === null ? window.tc_vars[tcKey] : false;
   };
 
@@ -129,7 +129,7 @@ export class TagCommanderService {
    * removes the var by specifying the key
    * @param {string} varKey
    */
-  removeTcVar(varKey) {
+  removeTcVar(varKey):void {
     if (typeof window.tc_vars[varKey] === 'string') {
       delete window.tc_vars[varKey];
     } else {
@@ -145,7 +145,7 @@ export class TagCommanderService {
    * will reload all the containers
    * @param {object} options can contain some options in a form of an object
    */
-  reloadAllContainers(options) {
+  reloadAllContainers(options):void {
     let options = options || {};
     this.log.debug('Reload all containers ', typeof options === 'object' ? 'with options ' + options : '');
     window.tC.container.reload(options);
