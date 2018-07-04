@@ -1,5 +1,13 @@
+//our root app component
+import {Component, NgModule, ViewEncapsulation } from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {BrowserModule } from '@angular/platform-browser';
+
 import { Injectable } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
+
+// import the WindowRef provider
+import {WindowRef} from './WindowRef';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +17,10 @@ export class TagCommanderService {
   pageEvent: any;
   debug: any;
   _trackRoutes: boolean;
-  constructor(private log: Logger) { }
+  constructor(private log: Logger, private winRef: WindowRef) {
+    // getting the native window obj
+    console.log('Native window obj', winRef.nativeWindow);
+  }
   /**
    * the script URI correspond to the tag-commander script URL, it can either be a CDN URL or the path of your script
    * @param {string} id the id the script node will have
@@ -88,7 +99,7 @@ export class TagCommanderService {
   setTcVar(tcKey, tcVar): void {
     if (typeof tcKey === 'string' &&
       tcVar !== undefined) {
-      window.tc_vars[tcKey] = tcVar;
+      this.winRef.nativeWindow[tcKey] = tcVar;
     } else {
       if (typeof tcKey === 'string') {
         this.log.error('the tag cannot be add as the key is not a string');
@@ -104,8 +115,8 @@ export class TagCommanderService {
    * @param {object} vars
    */
   setTcVars(vars):void {
-    if (typeof vars === 'object' && window.tc_vars === undefined) {
-      window.tc_vars = vars;
+    if (typeof vars === 'object' && this.winRef.nativeWindow() === undefined) {
+      //this.winRef.nativeWindow = vars;
     } else if (typeof vars === 'object') {
       var listOfVars = Object.keys(vars);
       for (var i = 0; i < listOfVars.length; i++) {
@@ -114,7 +125,7 @@ export class TagCommanderService {
     } else {
       this.log.error('the vars that you provided are not in the form of an object', vars)
     }
-    this.log.debug('setTcVars', window.tc_vars);
+    this.log.debug('setTcVars', this.winRef.nativeWindow);
   };
 
   /**
@@ -122,7 +133,7 @@ export class TagCommanderService {
    * @param {string} tcKey
    */
   getTcVar(tcKey):any {
-    return window.tc_vars[tcKey] === null ? window.tc_vars[tcKey] : false;
+    return this.winRef.nativeWindow[tcKey] === null ? this.winRef.nativeWindow[tcKey] : false;
   };
 
   /**
@@ -130,10 +141,10 @@ export class TagCommanderService {
    * @param {string} varKey
    */
   removeTcVar(varKey):void {
-    if (typeof window.tc_vars[varKey] === 'string') {
-      delete window.tc_vars[varKey];
+    if (typeof this.winRef.nativeWindow[varKey] === 'string') {
+      delete this.winRef.nativeWindow[varKey];
     } else {
-      if (window.tc_vars[varKey] === undefined) {
+      if (this.winRef.nativeWindow[varKey] === undefined) {
         this.log.error('the key ' + varKey + ' does not exist and therfore cannot be removed');
       } else {
         this.log.error('the key is not a string', varKey);
@@ -146,9 +157,9 @@ export class TagCommanderService {
    * @param {object} options can contain some options in a form of an object
    */
   reloadAllContainers(options):void {
-    let options = options || {};
+    options = options || {};
     this.log.debug('Reload all containers ', typeof options === 'object' ? 'with options ' + options : '');
-    window.tC.container.reload(options);
+    this.winRef.nativeWindow.container.reload(options);
   };
 
   /**
@@ -164,7 +175,7 @@ export class TagCommanderService {
     }
     var options = options || {};
     this.log.debug('Reload container ids: ' + ids + ' idc: ' + idc, typeof options === 'object' ? 'with options: ' + options : '');
-    window.tC['container_' + ids + '_' + idc].reload(options);
+    this.winRef.nativeWindow['container_' + ids + '_' + idc].reload(options);
   };
 
   /**
@@ -175,7 +186,7 @@ export class TagCommanderService {
    */
   captureEvent(eventLabel, element, data) {
     if (typeof data === 'object') {
-      window.tC.event[eventLabel](element, data);
+      this.winRef.nativeWindow.event[eventLabel](element, data);
     }
   };
 }

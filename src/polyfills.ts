@@ -78,5 +78,5 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
-import 'intl';
-import 'intl/locale-data/jsonp/en';
+declare global { interface Window { myCustomFn: any; } }
+window.myCustomFn = window.myCustomFn || {};
