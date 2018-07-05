@@ -12,6 +12,8 @@ import { NgxTagCommanderModule } from './ngx-tag-commander/ngx-tag-commander.mod
 // import { TcEventDirective } from './ngx-tag-commander/tc-event.directive/tc-event.directive';
 import { TagCommanderService } from './ngx-tag-commander/tag-commander.service/tag-commander.service';
 
+import {WindowRef} from './ngx-tag-commander/tag-commander.service/WindowRef';
+
 
 const appRoutes: Routes = [
   {
@@ -46,10 +48,10 @@ const appRoutes: Routes = [
     AppRoutingModule,
     NgxTagCommanderModule
   ],
-  providers: [],
+  providers: [WindowRef],
   bootstrap: [AppComponent]
 })
-export class AppModule { 
+export class AppModule {
   constructor(tcService: TagCommanderService) {
     tcService.addContainer('container_body', '/assets/tag-commander-body.js', 'body');
     tcService.addContainer('container_head', '/assets/tag-commander-head.js', 'head');
