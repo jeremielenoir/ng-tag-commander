@@ -4,7 +4,6 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule } from '@angular/platform-browser';
 
 import { Injectable } from '@angular/core';
-import { Logger } from 'angular2-logger/core';
 
 // import the WindowRef provider
 import {WindowRef} from './WindowRef';
@@ -17,7 +16,7 @@ export class TagCommanderService {
   pageEvent: any;
   debug: any;
   _trackRoutes: boolean;
-  constructor(private log: Logger, private winRef: WindowRef) {
+  constructor(private winRef: WindowRef) {
     // getting the native window obj
     console.log('Native window obj', winRef.nativeWindow);
   }
@@ -76,11 +75,6 @@ export class TagCommanderService {
    */
   setDebug(debug) {
     this.debug = debug;
-    if (debug) {
-      this.log.level = this.log.Level.DEBUG;
-    } else {
-      this.log.level = this.log.Level.OFF;
-    }
   };
 
   /**
@@ -102,9 +96,9 @@ export class TagCommanderService {
       this.winRef.nativeWindow[tcKey] = tcVar;
     } else {
       if (typeof tcKey === 'string') {
-        this.log.error('the tag cannot be add as the key is not a string');
+        console.error('the tag cannot be add as the key is not a string');
       } else {
-        this.log.error('the tagValue is undefined');
+        console.error('the tagValue is undefined');
       }
     }
   };
@@ -123,9 +117,9 @@ export class TagCommanderService {
         this.setTcVar(listOfVars[i], vars[listOfVars[i]]);
       }
     } else {
-      this.log.error('the vars that you provided are not in the form of an object', vars)
+      console.error('the vars that you provided are not in the form of an object', vars)
     }
-    this.log.debug('setTcVars', this.winRef.nativeWindow);
+    console.debug('setTcVars', this.winRef.nativeWindow);
   };
 
   /**
@@ -145,9 +139,9 @@ export class TagCommanderService {
       delete this.winRef.nativeWindow[varKey];
     } else {
       if (this.winRef.nativeWindow[varKey] === undefined) {
-        this.log.error('the key ' + varKey + ' does not exist and therfore cannot be removed');
+        console.error('the key ' + varKey + ' does not exist and therfore cannot be removed');
       } else {
-        this.log.error('the key is not a string', varKey);
+        console.error('the key is not a string', varKey);
       }
     }
   };
@@ -158,7 +152,7 @@ export class TagCommanderService {
    */
   reloadAllContainers(options):void {
     options = options || {};
-    this.log.debug('Reload all containers ', typeof options === 'object' ? 'with options ' + options : '');
+    console.debug('Reload all containers ', typeof options === 'object' ? 'with options ' + options : '');
     this.winRef.nativeWindow.container.reload(options);
   };
 
@@ -170,11 +164,11 @@ export class TagCommanderService {
    */
   reloadContainer(ids, idc, options) {
     if ((!ids || !idc) && typeof ids !== 'number' && typeof idc !== 'number') {
-      this.log.error('Cannot reload container with no ids or idcs');
+      console.error('Cannot reload container with no ids or idcs');
       return false;
     }
     var options = options || {};
-    this.log.debug('Reload container ids: ' + ids + ' idc: ' + idc, typeof options === 'object' ? 'with options: ' + options : '');
+    console.debug('Reload container ids: ' + ids + ' idc: ' + idc, typeof options === 'object' ? 'with options: ' + options : '');
     this.winRef.nativeWindow['container_' + ids + '_' + idc].reload(options);
   };
 
