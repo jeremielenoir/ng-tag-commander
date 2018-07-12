@@ -20,7 +20,7 @@ export class ShopPageComponent implements OnInit {
       quantity: 2
     }
   ];
-
+  defaultLanguage: string = 'fr';
   defaultStoreCurrency: string = '€';
   isMsgDisplayed: boolean = false;
 
@@ -57,7 +57,6 @@ export class ShopPageComponent implements OnInit {
       this.cartItems[index].quantity += this.pageItem.quantity;
     }
     this.pageItem.quantity = 0;
-    // TagCommander.captureEvent('cart_checkout', document.querySelector('#buy_button'), { buy: 'true' })
   }
   removeFromCart(index) {
     this.cartItems.splice(index, 1);
@@ -66,11 +65,22 @@ export class ShopPageComponent implements OnInit {
     if (this.cartItems[index].quantity === 1) {
       this.removeFromCart(index);
     } else {
-        this.cartItems[index].quantity -= 1;
+      this.cartItems[index].quantity -= 1;
     }
   }
   addQuantityFromCartItem(index) {
     this.cartItems[index].quantity += 1;
+  }
+  cartGrandTotal () {
+    let grandTotal:number = 0
+    this.cartItems.forEach((cartItem) => {
+      grandTotal += cartItem.price * cartItem.quantity;
+    });
+    return grandTotal;
+  }
+  checkout() {
+    this.cartItems = [];
+    this.isMsgDisplayed = true;
   }
 }
 

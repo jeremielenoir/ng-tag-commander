@@ -1,6 +1,6 @@
 <div [ngClass]="isMsgDisplayed ? 'msg-card-displayed' : 'msg-card-not-displayed'">thanks you for your purchase</div>
 <h1 class="main-eshop-title">E-commerce page</h1>
-<!-- <div tc-set-vars='{"env_language": $scope.default.language}'></div> -->
+<div [tcSetVars]="{'env_language': defaultLanguage}"></div>
 <div class="article-container">
     <div class="left-container">
         <div class="item-name">
@@ -24,7 +24,7 @@
                     <button class="sm-button green-500" (click)="addQuantity()"> + </button>        
                 </div>
                 <span class="price">{{ pageItem.price * pageItem.quantity }} {{ defaultStoreCurrency }}</span>
-                <button class="button blue-500 cart-button" (click)="addToCart()" tc-event='{"eventId": "add_to_cart", "data": $ctrl.pageItem}'>Add to Cart</button>
+                <button class="button blue-500 cart-button" (click)="addToCart()" [tcEvent]="'add_to_cart'" [tcEventLabel]="'add_to_cart'" [tcEventObj]="cartItems">Add to Cart</button>
             </div>
         </div>
     </div>
@@ -36,9 +36,9 @@
                     <h5>{{ item.name }}</h5>
                     <div class="cart-quantity">
                         <div class="grouped">
-                            <button class="sm-button red-500" (click)="removeQuantityFromCartItem(i)" tc-event='{"eventId": "remove_from_cart", "data": $ctrl.pageItem}'> - </button>
+                            <button class="sm-button red-500" (click)="removeQuantityFromCartItem(i)" [tcEvent]="{'eventLabel': 'remove_from_cart', 'data': item}"> - </button>
                             <span>{{ item.quantity }}</span>
-                            <button class="sm-button green-500" (click)="addQuantityFromCartItem(i)" tc-event='{"eventId": "add_to_cart", "data": $ctrl.pageItem}'> + </button>
+                            <button class="sm-button green-500" (click)="addQuantityFromCartItem(i)" [tcEvent]="{'eventLabel': 'add_to_cart', 'data': item}"> + </button>
                         </div>
                         <div class="cart-item-price">
                             {{ item.quantity * item.price }} {{ defaultStoreCurrency }}
@@ -49,7 +49,7 @@
             <div class="total-price">
                 <span>Total:</span>
                 <span class="grand-total"> {{ cartGrandTotal() }} {{ defaultStoreCurrency }}</span>
-                <button class="button green-500 buy-button" (click)="checkout(); isMsgDisplayed = true" tc-event='{"eventId": "cart_checkout", "data": $ctrl.cartItems}'>Buy</button>
+                <button class="button green-500 buy-button" (click)="checkout(); isMsgDisplayed = true" [tcEvent]="{'eventLabel': 'cart_checkout', 'data': item}">Buy</button>
             </div>
         </div>
     </div>

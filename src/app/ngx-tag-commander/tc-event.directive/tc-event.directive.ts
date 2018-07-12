@@ -6,19 +6,21 @@ import { TagCommanderService } from '../tag-commander.service/tag-commander.serv
   selector: '[tcEvent]'
 })
 export class TcEventDirective {
-  @Input('tcEvent') event: TcEvent;
-  constructor(el: ElementRef, tcService: TagCommanderService) { 
-    console.log(event);
-    tcService.captureEvent(this.event.label, el, this.event.data);
+  @Input('tcEvent') tcEvent;
+  @Input('tcEventLabel') tcEventLabel;
+  @Input('tcEventObj') tcEventObj;
+  constructor(private el: ElementRef, private tcService: TagCommanderService) {
   }
-}
-class TcEvent {
-  label: string;
-  element: Element;
-  data: object
-  constructor(label: string, el: Element, data: object) {
-    this.label = label;
-    this.element = el;
-    this.data = data;
+
+  ngAfterViewInit() {
+    if (typeof this.tcEvent === 'object' && (this.tcEventLabel !== undefined || this.tcEventObj !== undefined)) {
+      try {
+        this.tcService.captureEvent(this.tcEvent.eventLabel, this.el, this.tcEvent.data);
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      this.tcService.captureEvent(this.tcEventLabel, this.el, this.tcEventObj);
+    }
   }
 }

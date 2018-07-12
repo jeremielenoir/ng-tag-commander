@@ -5,9 +5,10 @@ import { TagCommanderService } from '../tag-commander.service/tag-commander.serv
   selector: '[tcSetVars]'
 })
 export class TcSetVarsDirective {
-  @Input('tcSetVars') data: object;
-  constructor(el: ElementRef, tcService: TagCommanderService) { 
-    console.log(event);
-    tcService.setTcVars(this.data);
+  @Input('tcSetVars') tcSetVars: object;
+  constructor(private el: ElementRef, private tcService: TagCommanderService) { 
+  }
+  ngAfterViewInit() {
+    this.tcService.setTcVars(this.tcSetVars);
   }
 }

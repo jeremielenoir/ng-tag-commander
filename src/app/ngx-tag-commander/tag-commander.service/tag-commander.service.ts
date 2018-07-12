@@ -91,9 +91,9 @@ export class TagCommanderService {
    * @param {*} tcVar
    */
   setTcVar(tcKey, tcVar): void {
-    if (typeof tcKey === 'string' &&
+    if (!!tcKey &&
       tcVar !== undefined) {
-      this.winRef.nativeWindow[tcKey] = tcVar;
+      this.winRef.nativeWindow.tc_vars[tcKey] = tcVar;
     } else {
       if (typeof tcKey === 'string') {
         console.error('the tag cannot be add as the key is not a string');
@@ -109,9 +109,7 @@ export class TagCommanderService {
    * @param {object} vars
    */
   setTcVars(vars):void {
-    if (typeof vars === 'object' && this.winRef.nativeWindow() === undefined) {
-      //this.winRef.nativeWindow = vars;
-    } else if (typeof vars === 'object') {
+    if (typeof vars === 'object') {
       var listOfVars = Object.keys(vars);
       for (var i = 0; i < listOfVars.length; i++) {
         this.setTcVar(listOfVars[i], vars[listOfVars[i]]);
@@ -127,7 +125,7 @@ export class TagCommanderService {
    * @param {string} tcKey
    */
   getTcVar(tcKey):any {
-    return this.winRef.nativeWindow[tcKey] === null ? this.winRef.nativeWindow[tcKey] : false;
+    return this.winRef.nativeWindow.tc_vars[tcKey] === null ? this.winRef.nativeWindow.tc_vars[tcKey] : false;
   };
 
   /**
@@ -135,10 +133,10 @@ export class TagCommanderService {
    * @param {string} varKey
    */
   removeTcVar(varKey):void {
-    if (typeof this.winRef.nativeWindow[varKey] === 'string') {
-      delete this.winRef.nativeWindow[varKey];
+    if (typeof this.winRef.nativeWindow.tc_vars[varKey] === 'string') {
+      delete this.winRef.nativeWindow.tc_vars[varKey];
     } else {
-      if (this.winRef.nativeWindow[varKey] === undefined) {
+      if (this.winRef.nativeWindow.tc_vars[varKey] === undefined) {
         console.error('the key ' + varKey + ' does not exist and therfore cannot be removed');
       } else {
         console.error('the key is not a string', varKey);
@@ -179,8 +177,8 @@ export class TagCommanderService {
    * @param {object} data the data you want to transmit
    */
   captureEvent(eventLabel, element, data) {
-    if (typeof data === 'object') {
-      this.winRef.nativeWindow.event[eventLabel](element, data);
+    if (typeof data === 'object' && typeof eventLabel === 'string') {
+      this.winRef.nativeWindow.tC.event[eventLabel](element, data);
     }
   };
 }

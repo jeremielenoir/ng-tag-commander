@@ -9,7 +9,8 @@ import { ShopPageComponent } from './shop-page/shop-page.component';
 import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
 
 import { NgxTagCommanderModule } from './ngx-tag-commander/ngx-tag-commander.module';
-// import { TcEventDirective } from './ngx-tag-commander/tc-event.directive/tc-event.directive';
+import { TcEventDirective } from './ngx-tag-commander/tc-event.directive/tc-event.directive';
+import { TcSetVarsDirective } from './ngx-tag-commander/tc-set-vars.directive/tc-set-vars.directive';
 import { TagCommanderService } from './ngx-tag-commander/tag-commander.service/tag-commander.service';
 
 import {WindowRef} from './ngx-tag-commander/tag-commander.service/WindowRef';
@@ -40,7 +41,7 @@ const appRoutes: Routes = [
     AppComponent,
     IndexPageComponent,
     ShopPageComponent,
-    DashboardPageComponent
+    DashboardPageComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
