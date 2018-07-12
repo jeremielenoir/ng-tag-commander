@@ -54,6 +54,7 @@ const appRoutes: Routes = [
 })
 export class AppModule {
   constructor(tcService: TagCommanderService) {
+    tcService.setDebug(false);
     tcService.addContainer('container_body', '/assets/tag-commander-body.js', 'body');
     tcService.addContainer('container_head', '/assets/tag-commander-head.js', 'head');
 

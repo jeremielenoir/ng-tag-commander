@@ -2,6 +2,7 @@
 import {Component, NgModule, ViewEncapsulation } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BrowserModule } from '@angular/platform-browser';
+import { NGXLogger, CustomNGXLoggerService, NgxLoggerLevel } from 'ngx-logger';
 
 import { Injectable } from '@angular/core';
 
@@ -16,9 +17,9 @@ export class TagCommanderService {
   pageEvent: any;
   debug: any;
   _trackRoutes: boolean;
-  constructor(private winRef: WindowRef) {
-    // getting the native window obj
-    console.log('Native window obj', winRef.nativeWindow);
+  private logger: NGXLogger;
+  constructor(private winRef: WindowRef, private customLogger: CustomNGXLoggerService) {
+    this.logger = customLogger.create({level: NgxLoggerLevel.DEBUG});
   }
   /**
    * the script URI correspond to the tag-commander script URL, it can either be a CDN URL or the path of your script
@@ -33,12 +34,12 @@ export class TagCommanderService {
     tagContainer.setAttribute('src', uri);
     tagContainer.setAttribute('id', id);
     if (typeof node !== 'string') {
-      console.warn('you didn\'t specify where you wanted to place the script, it will be placed in the head by default');
+      this.logger.warn('you didn\'t specify where you wanted to place the script, it will be placed in the head by default');
       document.querySelector('head').appendChild(tagContainer);
     } else if (node.toLowerCase() === 'head' || node.toLowerCase() === 'body') {
       document.querySelector(node.toLowerCase()).appendChild(tagContainer);
     } else {
-      console.warn('you didn\'t correctily specify where you wanted to place the script, it will be placed in the head by default');
+      this.logger.warn('you didn\'t correctily specify where you wanted to place the script, it will be placed in the head by default');
       document.querySelector('head').appendChild(tagContainer);
     }
   };
@@ -75,6 +76,11 @@ export class TagCommanderService {
    */
   setDebug(debug) {
     this.debug = debug;
+    if (debug) {
+      this.logger.updateConfig({level: NgxLoggerLevel.DEBUG});
+    } else {
+      this.logger.updateConfig({level: NgxLoggerLevel.OFF});
+    }
   };
 
   /**
@@ -96,9 +102,9 @@ export class TagCommanderService {
       this.winRef.nativeWindow.tc_vars[tcKey] = tcVar;
     } else {
       if (typeof tcKey === 'string') {
-        console.error('the tag cannot be add as the key is not a string');
+        this.logger.error('the tag cannot be add as the key is not a string');
       } else {
-        console.error('the tagValue is undefined');
+        this.logger.error('the tagValue is undefined');
       }
     }
   };
@@ -109,15 +115,15 @@ export class TagCommanderService {
    * @param {object} vars
    */
   setTcVars(vars):void {
+    this.logger.debug('setTcVars', vars);
     if (typeof vars === 'object') {
       var listOfVars = Object.keys(vars);
       for (var i = 0; i < listOfVars.length; i++) {
         this.setTcVar(listOfVars[i], vars[listOfVars[i]]);
       }
     } else {
-      console.error('the vars that you provided are not in the form of an object', vars)
+      this.logger.error('the vars that you provided are not in the form of an object', vars)
     }
-    console.debug('setTcVars', this.winRef.nativeWindow);
   };
 
   /**
@@ -125,6 +131,7 @@ export class TagCommanderService {
    * @param {string} tcKey
    */
   getTcVar(tcKey):any {
+    this.logger.debug('getTcVars', tcKey);
     return this.winRef.nativeWindow.tc_vars[tcKey] === null ? this.winRef.nativeWindow.tc_vars[tcKey] : false;
   };
 
@@ -133,13 +140,14 @@ export class TagCommanderService {
    * @param {string} varKey
    */
   removeTcVar(varKey):void {
+    this.logger.debug('removeTcVars', varKey);
     if (typeof this.winRef.nativeWindow.tc_vars[varKey] === 'string') {
       delete this.winRef.nativeWindow.tc_vars[varKey];
     } else {
       if (this.winRef.nativeWindow.tc_vars[varKey] === undefined) {
-        console.error('the key ' + varKey + ' does not exist and therfore cannot be removed');
+        this.logger.error('the key ' + varKey + ' does not exist and therfore cannot be removed');
       } else {
-        console.error('the key is not a string', varKey);
+        this.logger.error('the key is not a string', varKey);
       }
     }
   };
@@ -149,8 +157,9 @@ export class TagCommanderService {
    * @param {object} options can contain some options in a form of an object
    */
   reloadAllContainers(options):void {
+    this.logger.debug('reloadAllContainers', options);
     options = options || {};
-    console.debug('Reload all containers ', typeof options === 'object' ? 'with options ' + options : '');
+    this.logger.debug('Reload all containers ', typeof options === 'object' ? 'with options ' + options : '');
     this.winRef.nativeWindow.container.reload(options);
   };
 
@@ -161,12 +170,13 @@ export class TagCommanderService {
    * @param {object} options can contain some options in a form of an object
    */
   reloadContainer(ids, idc, options) {
+    this.logger.debug('reloadContainer', ids, idc, options);
     if ((!ids || !idc) && typeof ids !== 'number' && typeof idc !== 'number') {
-      console.error('Cannot reload container with no ids or idcs');
+      this.logger.error('Cannot reload container with no ids or idcs');
       return false;
     }
     var options = options || {};
-    console.debug('Reload container ids: ' + ids + ' idc: ' + idc, typeof options === 'object' ? 'with options: ' + options : '');
+    this.logger.debug('Reload container ids: ' + ids + ' idc: ' + idc, typeof options === 'object' ? 'with options: ' + options : '');
     this.winRef.nativeWindow['container_' + ids + '_' + idc].reload(options);
   };
 
@@ -177,6 +187,7 @@ export class TagCommanderService {
    * @param {object} data the data you want to transmit
    */
   captureEvent(eventLabel, element, data) {
+    this.logger.debug('captureEvent', eventLabel, element, data);
     if (typeof data === 'object' && typeof eventLabel === 'string') {
       this.winRef.nativeWindow.tC.event[eventLabel](element, data);
     }

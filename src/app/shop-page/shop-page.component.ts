@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TagCommanderService } from '../ngx-tag-commander/tag-commander.service/tag-commander.service';
 
 @Component({
   selector: 'app-shop-page',
@@ -24,7 +25,7 @@ export class ShopPageComponent implements OnInit {
   defaultStoreCurrency: string = '€';
   isMsgDisplayed: boolean = false;
 
-  constructor() { }
+  constructor(private tcService: TagCommanderService) { }
 
   ngOnInit() {
   }
@@ -60,6 +61,7 @@ export class ShopPageComponent implements OnInit {
   }
   removeFromCart(index) {
     this.cartItems.splice(index, 1);
+    this.tcService.setTcVars({'cartItem': this.cartItems});
   }
   removeQuantityFromCartItem(index) {
     if (this.cartItems[index].quantity === 1) {
