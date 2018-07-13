@@ -3,6 +3,8 @@ import {Component, NgModule, ViewEncapsulation } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BrowserModule } from '@angular/platform-browser';
 import { NGXLogger, CustomNGXLoggerService, NgxLoggerLevel } from 'ngx-logger';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 
@@ -12,14 +14,22 @@ import {WindowRef} from './WindowRef';
 @Injectable({
   providedIn: 'root'
 })
-export class TagCommanderService {
+export class TagCommanderService{
   _tcContainers: Array<any> = [];
   pageEvent: any;
   debug: any;
   _trackRoutes: boolean;
   private logger: NGXLogger;
-  constructor(private winRef: WindowRef, private customLogger: CustomNGXLoggerService) {
-    this.logger = customLogger.create({level: NgxLoggerLevel.DEBUG});
+
+  constructor(private winRef: WindowRef, 
+    private customLogger: CustomNGXLoggerService, 
+    private router: Router) {
+      this.logger = customLogger.create({level: NgxLoggerLevel.DEBUG});
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd))
+      .subscribe((route: ActivatedRoute) => {
+          console.log('route', route);
+      });
   }
   /**
    * the script URI correspond to the tag-commander script URL, it can either be a CDN URL or the path of your script
@@ -27,7 +37,7 @@ export class TagCommanderService {
    * @param {string} uri the source of the script
    * @param {string} node the node on witch the script will be placed, it can either be head or body
   */
-  addContainer(id, uri, node) {
+  addContainer(id:string, uri:string, node:string):void {
     this._tcContainers.push({ 'id': id, 'uri': uri });
     let tagContainer = document.createElement('script');
     tagContainer.setAttribute('type', 'text/javascript');
@@ -42,87 +52,65 @@ export class TagCommanderService {
       this.logger.warn('you didn\'t correctily specify where you wanted to place the script, it will be placed in the head by default');
       document.querySelector('head').appendChild(tagContainer);
     }
-  };
+  }
 
   /**
    * The script URI correspond to the tag-commander script URL, it can either be a CDN URL or the path of your script
    * @param {string} id
    */
-  removeContainer(id) {
-
+  removeContainer(id:string):void {
     let container = document.getElementById(id);
     let containers = this._tcContainers.slice(0);
 
     document.querySelector('head').removeChild(container);
 
-    for (var i = 0; i < containers.length; i++) {
+    for (let i = 0; i < containers.length; i++) {
       if (containers[i].id === id) {
         this._tcContainers.splice(i, 1);
       }
     }
-  };
+  }
 
-  /**
-   * with this method you can set the event name corresponding to the URL change
-   * @param {string} name of the event you wan to track
-   */
-  setPageEvent(name) {
-    this.pageEvent = name;
-    return this;
-  };
   /**
    * will display the debug messages if true
    * @param {boolean} debug if set to true it will activate the debug msg default is false
    */
-  setDebug(debug) {
+  setDebug(debug:boolean):void {
     this.debug = debug;
     if (debug) {
       this.logger.updateConfig({level: NgxLoggerLevel.DEBUG});
     } else {
       this.logger.updateConfig({level: NgxLoggerLevel.OFF});
     }
-  };
+  }
 
   /**
    * allows the router to be tracked
    * @param {boolean} b will read routes if set to true
    */
-  trackRoutes(b):void {
+  trackRoutes(b:boolean):void {
     this._trackRoutes = !!b;
-  };
+  }
 
   /**
    * set or update the value of the var
    * @param {string} tcKey
    * @param {*} tcVar
    */
-  setTcVar(tcKey, tcVar): void {
-    if (!!tcKey &&
-      tcVar !== undefined) {
-      this.winRef.nativeWindow.tc_vars[tcKey] = tcVar;
-    } else {
-      if (typeof tcKey === 'string') {
-        this.logger.error('the tag cannot be add as the key is not a string');
-      } else {
-        this.logger.error('the tagValue is undefined');
-      }
-    }
-  };
+  setTcVar(tcKey:string, tcVar:any): void {
+    this.winRef.nativeWindow.tc_vars[tcKey] = tcVar;
+  }
 
   /**
    * set your varibles for the different providers, when called the first time it
    * instantiate the external varible
    * @param {object} vars
    */
-  setTcVars(vars):void {
+  setTcVars(vars:object):void {
     this.logger.debug('setTcVars', vars);
-    if (typeof vars === 'object') {
-      var listOfVars = Object.keys(vars);
-      for (var i = 0; i < listOfVars.length; i++) {
-        this.setTcVar(listOfVars[i], vars[listOfVars[i]]);
-      }
-    } else {
-      this.logger.error('the vars that you provided are not in the form of an object', vars)
+    let listOfVars = Object.keys(vars);
+    for (var i = 0; i < listOfVars.length; i++) {
+      this.setTcVar(listOfVars[i], vars[listOfVars[i]]);
     }
   };
 
@@ -130,7 +118,7 @@ export class TagCommanderService {
    * get the value of the var
    * @param {string} tcKey
    */
-  getTcVar(tcKey):any {
+  getTcVar(tcKey:string):any {
     this.logger.debug('getTcVars', tcKey);
     return this.winRef.nativeWindow.tc_vars[tcKey] === null ? this.winRef.nativeWindow.tc_vars[tcKey] : false;
   };
@@ -139,24 +127,16 @@ export class TagCommanderService {
    * removes the var by specifying the key
    * @param {string} varKey
    */
-  removeTcVar(varKey):void {
+  removeTcVar(varKey:string):void {
     this.logger.debug('removeTcVars', varKey);
-    if (typeof this.winRef.nativeWindow.tc_vars[varKey] === 'string') {
-      delete this.winRef.nativeWindow.tc_vars[varKey];
-    } else {
-      if (this.winRef.nativeWindow.tc_vars[varKey] === undefined) {
-        this.logger.error('the key ' + varKey + ' does not exist and therfore cannot be removed');
-      } else {
-        this.logger.error('the key is not a string', varKey);
-      }
-    }
+    delete this.winRef.nativeWindow.tc_vars[varKey];
   };
 
   /**
    * will reload all the containers
    * @param {object} options can contain some options in a form of an object
    */
-  reloadAllContainers(options):void {
+  reloadAllContainers(options:object):void {
     this.logger.debug('reloadAllContainers', options);
     options = options || {};
     this.logger.debug('Reload all containers ', typeof options === 'object' ? 'with options ' + options : '');
@@ -165,16 +145,11 @@ export class TagCommanderService {
 
   /**
    * will reload a specifique container
-   * @param {string} ids
-   * @param {string} idc
+   * @param {number} ids
+   * @param {number} idc
    * @param {object} options can contain some options in a form of an object
    */
-  reloadContainer(ids, idc, options) {
-    this.logger.debug('reloadContainer', ids, idc, options);
-    if ((!ids || !idc) && typeof ids !== 'number' && typeof idc !== 'number') {
-      this.logger.error('Cannot reload container with no ids or idcs');
-      return false;
-    }
+  reloadContainer(ids:string, idc:string, options:object):void {
     var options = options || {};
     this.logger.debug('Reload container ids: ' + ids + ' idc: ' + idc, typeof options === 'object' ? 'with options: ' + options : '');
     this.winRef.nativeWindow['container_' + ids + '_' + idc].reload(options);
@@ -186,10 +161,8 @@ export class TagCommanderService {
    * @param {HTMLElement} element the HTMLelement on witch the event is attached
    * @param {object} data the data you want to transmit
    */
-  captureEvent(eventLabel, element, data) {
+  captureEvent(eventLabel:string, element:any, data:object):void {
     this.logger.debug('captureEvent', eventLabel, element, data);
-    if (typeof data === 'object' && typeof eventLabel === 'string') {
-      this.winRef.nativeWindow.tC.event[eventLabel](element, data);
-    }
+    this.winRef.nativeWindow.tC.event[eventLabel](element, data);
   };
 }
