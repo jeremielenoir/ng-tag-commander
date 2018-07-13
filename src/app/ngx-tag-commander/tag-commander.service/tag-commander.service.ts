@@ -1,7 +1,7 @@
 //our root app component
-import {Component, NgModule, ViewEncapsulation } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BrowserModule } from '@angular/platform-browser';
+import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { CommonModule} from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 import { NGXLogger, CustomNGXLoggerService, NgxLoggerLevel } from 'ngx-logger';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -25,11 +25,13 @@ export class TagCommanderService{
     private customLogger: CustomNGXLoggerService, 
     private router: Router) {
       this.logger = customLogger.create({level: NgxLoggerLevel.DEBUG});
-      this.router.events.pipe(
-        filter(event => event instanceof NavigationEnd))
-      .subscribe((route: ActivatedRoute) => {
-          console.log('route', route);
-      });
+
+      // this.router.events.pipe(
+      //   filter(event => event instanceof NavigationEnd))
+      // .subscribe((route: ActivatedRoute) => {
+      //     console.log('route', route);
+      // });
+      
   }
   /**
    * the script URI correspond to the tag-commander script URL, it can either be a CDN URL or the path of your script
