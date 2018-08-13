@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+
 import { IndexPageComponent } from './index-page/index-page.component';
 import { ShopPageComponent } from './shop-page/shop-page.component';
 import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
@@ -40,7 +41,7 @@ const appRoutes: Routes = [
     AppComponent,
     IndexPageComponent,
     ShopPageComponent,
-    DashboardPageComponent,
+    DashboardPageComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
