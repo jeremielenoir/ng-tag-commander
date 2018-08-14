@@ -13,7 +13,7 @@ export class TcEventDirective {
   }
 
   ngAfterViewInit() {
-    if (typeof this.tcEvent === 'object' && (this.tcEventLabel !== undefined || this.tcEventObj !== undefined)) {
+    if (typeof this.tcEvent === 'object' && (this.tcEventLabel === undefined || this.tcEventObj === undefined)) {
       try {
         this.tcService.captureEvent(this.tcEvent.eventLabel, this.el, this.tcEvent.data);
       } catch (e) {

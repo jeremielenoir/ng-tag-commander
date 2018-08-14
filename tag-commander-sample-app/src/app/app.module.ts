@@ -26,8 +26,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'shop',
-    component: ShopPageComponent,
-    data: {truc : 'bidule'},
+    component: ShopPageComponent
   },
   {
     path: 'dashboard',
