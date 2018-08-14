@@ -188,5 +188,3 @@ After forking you will need to run the following from a command line to get your
 1. ```yarn install```
 
 After install you have the following commands available to you from a command line:
-
-1. ```gulp```

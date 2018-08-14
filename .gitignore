@@ -6,6 +6,7 @@
 /out-tsc
 
 # dependencies
+/tag-commander-sample-app/node_modules
 /node_modules
 
 # IDEs and editors
