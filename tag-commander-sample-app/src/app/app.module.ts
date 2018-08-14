@@ -9,10 +9,10 @@ import { IndexPageComponent } from './index-page/index-page.component';
 import { ShopPageComponent } from './shop-page/shop-page.component';
 import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
 
-import { NgxTagCommanderModule } from './ngx-tag-commander/ngx-tag-commander.module';
-import { TagCommanderService } from './ngx-tag-commander/tag-commander.service/tag-commander.service';
+import { NgxTagCommanderModule } from '../../../src/ngx-tag-commander/ngx-tag-commander.module';
+import { TagCommanderService } from '../../../src/ngx-tag-commander/tag-commander.service/tag-commander.service';
 
-import {WindowRef} from './ngx-tag-commander/tag-commander.service/WindowRef';
+import {WindowRef} from '../../../src/ngx-tag-commander/tag-commander.service/WindowRef';
 
 
 const appRoutes: Routes = [
