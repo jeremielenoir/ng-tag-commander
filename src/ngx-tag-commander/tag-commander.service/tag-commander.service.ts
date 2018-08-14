@@ -1,20 +1,14 @@
 //our root app component
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { CommonModule} from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { NGXLogger, CustomNGXLoggerService, NgxLoggerLevel } from 'ngx-logger';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { WindowRef } from './WindowRef';
 
 import { Injectable } from '@angular/core';
-
-// import the WindowRef provider
-import {WindowRef} from './WindowRef';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TagCommanderService{
+export class TagCommanderService {
   _tcContainers: Array<any> = [];
   pageEvent: any;
   debug: any;

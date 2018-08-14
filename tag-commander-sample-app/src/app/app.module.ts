@@ -9,10 +9,9 @@ import { IndexPageComponent } from './index-page/index-page.component';
 import { ShopPageComponent } from './shop-page/shop-page.component';
 import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
 
-import { NgxTagCommanderModule } from '../../../src/ngx-tag-commander/ngx-tag-commander.module';
-import { TagCommanderService } from '../../../src/ngx-tag-commander/tag-commander.service/tag-commander.service';
+import { NgxTagCommanderModule, TagCommanderService } from '../../../';
 
-import {WindowRef} from '../../../src/ngx-tag-commander/tag-commander.service/WindowRef';
+import { WindowRef } from '../../../src/ngx-tag-commander/tag-commander.service/WindowRef';
 
 
 const appRoutes: Routes = [
@@ -26,7 +25,7 @@ const appRoutes: Routes = [
     component: IndexPageComponent
   },
   {
-    path: 'shop/test',
+    path: 'shop',
     component: ShopPageComponent,
     data: {truc : 'bidule'},
   },

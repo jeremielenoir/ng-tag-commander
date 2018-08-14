@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TagCommanderService } from '../../../../src/ngx-tag-commander/tag-commander.service/tag-commander.service';
+import { TagCommanderService } from '../../../../';
 
 @Component({
   selector: 'app-shop-page',
