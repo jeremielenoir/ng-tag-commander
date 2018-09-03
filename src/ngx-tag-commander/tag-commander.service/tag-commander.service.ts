@@ -2,7 +2,6 @@
 import { NGXLogger, CustomNGXLoggerService, NgxLoggerLevel } from 'ngx-logger';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { WindowRef } from './WindowRef';
-
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -15,17 +14,14 @@ export class TagCommanderService {
   _trackRoutes: boolean;
   private logger: NGXLogger;
 
-  constructor(private winRef: WindowRef, 
-    private customLogger: CustomNGXLoggerService, 
+  constructor(private winRef: WindowRef,
+    private customLogger: CustomNGXLoggerService,
     private router: Router) {
       this.logger = customLogger.create({level: NgxLoggerLevel.DEBUG});
+  }
 
-      // this.router.events.pipe(
-      //   filter(event => event instanceof NavigationEnd))
-      // .subscribe((route: ActivatedRoute) => {
-      //     console.log('route', route);
-      // });
-      
+  ngOnInit () {
+    console.log(this.router);
   }
   /**
    * the script URI correspond to the tag-commander script URL, it can either be a CDN URL or the path of your script

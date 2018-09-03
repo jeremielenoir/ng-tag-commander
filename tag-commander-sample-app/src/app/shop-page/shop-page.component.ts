@@ -21,7 +21,7 @@ export class ShopPageComponent implements OnInit {
       quantity: 2
     }
   ];
-  defaultLanguage: string = 'fr';
+  defaultEnv: string = 'AngularX';
   defaultStoreCurrency: string = '€';
   isMsgDisplayed: boolean = false;
 
