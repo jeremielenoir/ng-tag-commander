@@ -18,19 +18,55 @@ const appRoutes: Routes = [
   {
     path: '',
     redirectTo: '/home',
-    pathMatch: 'full'
+    pathMatch: 'full',
+    data: {
+      tcInclude: [{
+        idc:  12,
+        ids: 4056,
+        options: {
+          exclusions: ["datastorage", "deduplication"]
+        }
+      }]
+    }
   },
   {
     path: 'home',
-    component: IndexPageComponent
+    component: IndexPageComponent,
+    data: {
+      tcInclude: [{
+        idc:  12,
+        ids: 4056,
+        options: {
+          exclusions: ["datastorage", "deduplication"]
+        }
+      }]
+    }
   },
   {
     path: 'shop',
-    component: ShopPageComponent
+    component: ShopPageComponent,
+    data: {
+      tcInclude: [{
+        idc:  12,
+        ids: 4056,
+        options: {
+          exclusions: ["datastorage", "deduplication"]
+        }
+      }]
+    }
   },
   {
     path: 'dashboard',
-    component: DashboardPageComponent
+    component: DashboardPageComponent,
+    data: {
+      tcInclude: [{
+        'idc':  12,
+        'ids': 4056,
+        options: {
+          exclusions: ["datastorage", "deduplication"]
+        }
+      }]
+    }
   }
 ];
 
@@ -52,7 +88,8 @@ const appRoutes: Routes = [
 })
 export class AppModule {
   constructor(tcService: TagCommanderService) {
-    tcService.setDebug(false);
+    tcService.setDebug(true);
+    tcService.trackRoutes(true);
     tcService.addContainer('container_body', '/assets/tag-commander-body.js', 'body');
     tcService.addContainer('container_head', '/assets/tag-commander-head.js', 'head');
   }

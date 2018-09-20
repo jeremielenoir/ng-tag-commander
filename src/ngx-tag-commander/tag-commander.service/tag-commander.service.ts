@@ -1,6 +1,6 @@
 //our root app component
 import { NGXLogger, CustomNGXLoggerService, NgxLoggerLevel } from 'ngx-logger';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router, RoutesRecognized } from '@angular/router';
 import { WindowRef } from './WindowRef';
 import { Injectable } from '@angular/core';
 
@@ -11,18 +11,24 @@ export class TagCommanderService {
   _tcContainers: Array<any> = [];
   pageEvent: any;
   debug: any;
-  _trackRoutes: boolean;
+  _trackRoutes: boolean = false;
   private logger: NGXLogger;
 
-  constructor(private winRef: WindowRef,
-    private customLogger: CustomNGXLoggerService,
-    private router: Router) {
-      this.logger = customLogger.create({level: NgxLoggerLevel.DEBUG});
+  constructor(private winRef: WindowRef, private customLogger: CustomNGXLoggerService, private router: Router) {
+    this.logger = customLogger.create({level: NgxLoggerLevel.DEBUG});
+    
+    this.router.events.subscribe(_data => {
+      if (_data instanceof RoutesRecognized && this._trackRoutes) {
+        if (_data.state.root.firstChild.data.tcInclude === undefined) {
+          let data: Array<any> = _data.state.root.firstChild.data.tcInclude;
+          data.forEach(container => {
+            this.reloadContainer(container['ids'], container['idc'], container['options']);
+          });
+        }
+      }
+    });
   }
 
-  ngOnInit () {
-    console.log(this.router);
-  }
   /**
    * the script URI correspond to the tag-commander script URL, it can either be a CDN URL or the path of your script
    * @param {string} id the id the script node will have
@@ -90,7 +96,9 @@ export class TagCommanderService {
    * @param {*} tcVar
    */
   setTcVar(tcKey:string, tcVar:any): void {
-    this.winRef.nativeWindow.tc_vars[tcKey] = tcVar;
+    if (typeof this.winRef.nativeWindow.tc_vars !== 'undefined') {
+      this.winRef.nativeWindow.tc_vars[tcKey] = tcVar;
+    }
   }
 
   /**
@@ -155,6 +163,12 @@ export class TagCommanderService {
    */
   captureEvent(eventLabel:string, element:any, data:object):void {
     this.logger.debug('captureEvent', eventLabel, element, data);
-    this.winRef.nativeWindow.tC.event[eventLabel](element, data);
+    if (typeof this.winRef.nativeWindow.tC !== 'undefined') {
+      if (eventLabel in Object.keys(this.winRef.nativeWindow.tC.event)){
+        this.winRef.nativeWindow.tC.event[eventLabel](element, data);
+      } else {
+        this.logger.error('the key ' + eventLabel + ' you specified in the catpure event does not existe');
+      }
+    }
   };
 }

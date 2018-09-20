@@ -71,6 +71,39 @@ constructor(private tcService: TagCommanderService) { }
 }
 ```
 
+## Declaring the route tracking
+first configure the module to track routes in app.module
+```js
+export class AppModule {
+  constructor(tcService: TagCommanderService) {
+    tcService.trackRoutes(true);
+  }
+}
+```
+then in your routes:
+```js
+const appRoutes: Routes = [
+  {
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full',
+    data: {
+      tcInclude: [{
+        'idc':  12,
+        'ids': 4056,
+        options: {
+          exclusions: ["datastorage", "deduplication"]
+        }
+      },
+      {
+        'idc':  11,
+        'ids': 4055,
+      }]
+    }
+  },
+```
+this will reload the specified containers, with the specified options
+
 ## Set Vars
 ### In a controller
 The `setVar` call allows to set your `tc_vars`.
