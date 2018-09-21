@@ -9,7 +9,7 @@ import { IndexPageComponent } from './index-page/index-page.component';
 import { ShopPageComponent } from './shop-page/shop-page.component';
 import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
 
-import { NgxTagCommanderModule, TagCommanderService } from '../../../';
+import { NgxTagCommanderModule, TagCommanderService } from 'ngx-tag-commander';
 
 import { WindowRef } from '../../../src/ngx-tag-commander/tag-commander.service/WindowRef';
 
