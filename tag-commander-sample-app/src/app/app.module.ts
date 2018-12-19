@@ -11,7 +11,7 @@ import { DashboardPageComponent } from './dashboard-page/dashboard-page.componen
 
 import { NgxTagCommanderModule, TagCommanderService } from 'ngx-tag-commander';
 
-import { WindowRef } from '../../../src/ngx-tag-commander/tag-commander.service/WindowRef';
+import { WindowRef } from 'ngx-tag-commander';
 
 
 const appRoutes: Routes = [

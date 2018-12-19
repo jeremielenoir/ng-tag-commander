@@ -1,6 +1,8 @@
 {
   "name": "ngx-tag-commander",
   "version": "0.9.0",
+  "main": "index.ts",
+  "author": "Lenoir Jérémie",
   "dependencies": {
     "@angular/common": "^6.1.2",
     "@angular/core": "^6.1.2",
