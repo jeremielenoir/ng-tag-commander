@@ -1,0 +1,14 @@
+{
+  "name": "ngx-tag-commander-v2",
+  "version": "0.9.3",
+  "author": "Lenoir Jérémie",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeremielenoir/ngx-tag-commander-v2"
+  },
+  "peerDependencies": {
+    "@angular/common": "^7.1.0",
+    "@angular/core": "^7.1.0"
+  }
+}
