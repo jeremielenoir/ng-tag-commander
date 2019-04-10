@@ -1,34 +1,50 @@
-import { Component, OnInit } from '@angular/core';
-import { TagCommanderService } from '../../../projects/ngx-tag-commander/src/lib/tag-commander.service/tag-commander.service';
+import { Component, OnInit } from "@angular/core";
+import { TagCommanderService } from "ngx-tag-commander";
 
 @Component({
-  selector: 'app-shop-page',
-  templateUrl: './shop-page.component.html',
-  styleUrls: ['./shop-page.component.scss']
+  selector: "app-shop-page",
+  templateUrl: "./shop-page.component.html",
+  styleUrls: ["./shop-page.component.scss"]
 })
 export class ShopPageComponent implements OnInit {
   pageItem: Item = {
-    id: '1',
-    name: 'TagCommander',
+    id: "1",
+    name: "TagCommander",
     price: 20,
     quantity: 0
   };
   cartItems: Array<Item> = [
     {
-      id: '2',
-      name: 'TagCommanderBis',
+      id: "2",
+      name: "TagCommanderBis",
       price: 90,
       quantity: 2
     }
   ];
-  defaultEnv: string = 'AngularX';
-  defaultStoreCurrency: string = '€';
+  defaultEnv: string = "AngularX";
+  defaultStoreCurrency: string = "€";
   isMsgDisplayed: boolean = false;
 
-  constructor(private tcService: TagCommanderService) { }
+  constructor(private tcService: TagCommanderService) {
+    tcService.setTcVars({
+      env_template: "shop",
+      env_work: "dev",
+      env_language: "en",
+      user_id: "124",
+      user_logged: "true",
+      user_age: "32",
+      user_newcustomer: "false"
+    });
+    // tcService.removeTcVar("env_template");
+  }
 
   ngOnInit() {
+    // this.tcService.reloadAllContainers({});
+    // this.tcService.reloadContainer('4056', '12', {
+    //   exclusions: ["datastorage", "deduplication"]
+    // });
   }
+
   removeQuantity() {
     if (this.pageItem.quantity > 1) {
       this.pageItem.quantity--;
@@ -47,13 +63,15 @@ export class ShopPageComponent implements OnInit {
 
     if (index === -1) {
       let item = this.pageItem;
-      item['quantity'] = this.pageItem.quantity;
-      this.cartItems.push(new Item(
-        this.pageItem.id,
-        this.pageItem.name,
-        this.pageItem.price,
-        this.pageItem.quantity
-      ));
+      item["quantity"] = this.pageItem.quantity;
+      this.cartItems.push(
+        new Item(
+          this.pageItem.id,
+          this.pageItem.name,
+          this.pageItem.price,
+          this.pageItem.quantity
+        )
+      );
     } else {
       this.cartItems[index].quantity += this.pageItem.quantity;
     }
@@ -61,7 +79,7 @@ export class ShopPageComponent implements OnInit {
   }
   removeFromCart(index) {
     this.cartItems.splice(index, 1);
-    this.tcService.setTcVars({'cartItem': this.cartItems});
+    this.tcService.setTcVars({ cartItem: this.cartItems });
   }
   removeQuantityFromCartItem(index) {
     if (this.cartItems[index].quantity === 1) {
@@ -73,9 +91,9 @@ export class ShopPageComponent implements OnInit {
   addQuantityFromCartItem(index) {
     this.cartItems[index].quantity += 1;
   }
-  cartGrandTotal () {
-    let grandTotal:number = 0
-    this.cartItems.forEach((cartItem) => {
+  cartGrandTotal() {
+    let grandTotal: number = 0;
+    this.cartItems.forEach(cartItem => {
       grandTotal += cartItem.price * cartItem.quantity;
     });
     return grandTotal;
