@@ -196,16 +196,20 @@ export class TagCommanderService {
   //  * @param {HTMLElement} element the HTMLelement on witch the event is attached
   //  * @param {object} data the data you want to transmit
   //  */
-  captureEvent(eventLabel: string, element: any, data: object): void {
-    this.logger.debug("captureEvent", eventLabel, element, data);
-    if (typeof this.winRef.nativeWindow.tC !== "undefined") {
-      if (eventLabel in this.winRef.nativeWindow.tC.event) {
-        this.winRef.nativeWindow.tC.event[eventLabel](element, data);
-      } else if (!(eventLabel in this.winRef.nativeWindow.tC.event)) {
-        let reloadCapture = setTimeout(() => {
-          this.captureEvent(eventLabel, element, data);
-        }, 1000);
-        clearTimeout(reloadCapture);
+  captureEvent(eventLabel: string, element: any, data: object, reloadCapture = false) {
+    if (reloadCapture === true) {
+      clearTimeout(reloadFunction);
+    } else {
+      this.logger.debug("captureEvent", eventLabel, element, data);
+      if (typeof this.winRef.nativeWindow.tC !== "undefined") {
+        if (eventLabel in this.winRef.nativeWindow.tC.event) {
+          this.winRef.nativeWindow.tC.event[eventLabel](element, data);
+        }
+        if (!(eventLabel in this.winRef.nativeWindow.tC.event)) {
+          var reloadFunction = setTimeout(() => {
+            this.captureEvent(eventLabel, element, data, reloadCapture = true);
+          }, 1000);
+        }
       }
     }
   }
