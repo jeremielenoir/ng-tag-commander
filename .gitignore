@@ -6,8 +6,11 @@
 /out-tsc
 
 # dependencies
-/tag-commander-sample-app/node_modules
 /node_modules
+
+# profiling files
+chrome-profiler-events.json
+speed-measure-plugin.json
 
 # IDEs and editors
 /.idea
